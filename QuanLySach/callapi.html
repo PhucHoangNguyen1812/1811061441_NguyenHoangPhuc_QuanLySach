@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/2001/xhtml">
+<head>
+    <title>Quản lý sách</title>
+</head>
+<body>
+    <div>
+        <h2>Danh sách</h2>
+        <ul id="sachs" />
+    </div>
+    <div>
+        <h2>Tìm kiếm bằng mã sách</h2>
+        <input type="text" id="prodId" size="5" />
+        <input type="button" value="Search" onclick="find();" />
+        <p id="sach" />
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    
+    $(document).ready(function () {
+        $.getJSON('api/Sach')
+            .done(function (data) {
+                $.each(data, function (key, item) {
+                    $('<li>', { text: formatItem(item) }).appendTo($('#sachs'));
+                });
+            });
+        });
+        function formatItem(item) {
+            return item.Title + ': $' + item.Price;
+        }
+        function find() {
+            var id = $('#prodId').val();
+            $.getJSON('api/Sach' + '/' + id)
+                .done(function (data) {
+                    $('#sach').text(formatItem(data));
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    $('#sach').text('Error: ' + err);
+                });
+         }
+    </script>.
+</body>
+</html>
